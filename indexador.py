@@ -127,25 +127,55 @@ def salvar_indice(indice_file='motor_indice.pkl'):
     except Exception as e:
         print(f"ERRO ao salvar o índice: {e}")
         return False
+    
+def carregar_indice(indice_file='motor_indice.pkl'):
+    """Tenta carregar o INDICE_INVERTIDO e a RAIZ_TRIE do arquivo, se existir."""
+    global INDICE_INVERTIDO, RAIZ_TRIE
+
+    if not os.path.exists(indice_file):
+        print(f"Arquivo de índice '{indice_file}' não encontrado. Iniciando re-indexação...")
+        return False
+
+    print(f"\nArquivo de índice '{indice_file}' encontrado. Carregando...")
+    try:
+        with open(indice_file, 'rb') as f:
+            dados_carregados = pickle.load(f)
+
+        # Limpa e carrega o novo índice invertido
+        INDICE_INVERTIDO.clear()
+        INDICE_INVERTIDO.update(dados_carregados.get('indice_invertido', {}))
+        # Carrega a Trie
+        RAIZ_TRIE = dados_carregados.get('raiz_trie', NoTrie())
+        print("Índices carregados com sucesso! Indexação pulada.")
+        return True
+    except Exception as e:
+        print(f"ERRO ao carregar o índice: {e}. Reconstruindo índice.")
+        return False
    
 if __name__ == "__main__":
+
+    indice_carregado = carregar_indice()
+
+    # 2. SE FALHAR, RECONSTRÓI E SALVA
+    if not indice_carregado:
+        # Reconstroi do zero lendo os arquivos
+        construir_indice_a_partir_de_arquivos()
+        print("\n--- Índice Invertido e Trie Construídos ---")
+        
+        # Salva o resultado para uso futuro
+        salvar_indice()
     
-    construir_indice_a_partir_de_arquivos()
-    print("\n--- Índice Invertido Construído ---")
+    print("\n--- Índices Prontos para Uso ---")
+
+    # 3. TESTES (Rodam sempre)
     
-    salvar_indice()
+    print("\n--- TESTANDO BUSCAS (Índice Invertido) ---")
+    print(f"Buscando 'raposa': {buscar('raposa')}")
+    print(f"Buscando 'cão preguiçoso': {buscar('cão preguiçoso')}")
+    print(f"Busca por 'projeto': Documentos -> {buscar('projeto')}")
     
     print("\n--- TESTANDO AUTOCOMPLETE (Trie) ---")
-    
-    prefixo1 = "ra"
-    print(f"AutoComplete '{prefixo1}': {buscar_prefixo(prefixo1)}")
+    print(f"AutoComplete 'ra': {buscar_prefixo('ra')}")
+    print(f"AutoComplete 'pr': {buscar_prefixo('pr')}")
+    print(f"AutoComplete 'xy': {buscar_prefixo('xy')}")
 
-    prefixo2 = "pr"
-    print(f"AutoComplete '{prefixo2}': {buscar_prefixo(prefixo2)}")
-    
-    prefixo3 = "xy"
-    print(f"AutoComplete '{prefixo3}': {buscar_prefixo(prefixo3)}")
-
-    print("\n--- TESTANDO BUSCA ---")
-    query_teste = "projeto"
-    print(f"Busca por '{query_teste}': Documentos -> {buscar(query_teste)}")
