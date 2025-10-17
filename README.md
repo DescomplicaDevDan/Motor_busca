@@ -32,15 +32,18 @@ A chave deste projeto é a diferença de comportamento entre a **busca booleana 
 | `"cão preguiçoso"` | `['doc1.txt', 'doc2.txt']` |
 
 ### 2. Busca Ranqueada (TF-IDF)
+
 *Função:* `calcular_tf_idf()`
 *Comportamento:* Retorna os documentos com pontuações de relevância, ordenados do maior para o menor score.
 
-| Consulta | Resultado (Documento, Pontuação) |
-| :--- | :--- |
-| `"raposa"` | `[('doc1.txt', 0.405), ('doc3.txt', 0.405)]` |
-| `"projeto"` | `[('doc3.txt', 1.098)]` |
+| Consulta | Resultado (Documento, Pontuação) | Prova de Ranqueamento |
+| :--- | :--- | :--- |
+| `"raposa"` | `[('doc4.txt', 0.5753), ('doc1.txt', 0.2876), ('doc3.txt', 0.2876)]` | **Doc4** possui o dobro da pontuação de relevância, provando que o TF-IDF identificou a maior frequência do termo, aparecendo em primeiro. |
+| `"cão preguiçoso"` | `[('doc1.txt', 0.9808), ('doc2.txt', 0.9808), ('doc3.txt', 0.2876)]` | Os termos têm maior peso e frequência no **Doc1 e Doc2**. O Doc3 contém o termo, mas sua baixa frequência o coloca em último lugar. |
+| `"projeto"` | `[('doc3.txt', 0.6931), ('doc4.txt', 0.6931)]` | O score do Doc4 foi afetado pela nova indexação, mas os documentos compartilham relevância semelhante para esta palavra. |
 
 ---
+
 ### 3. Autocomplete (Árvore Trie)
 
 Demonstração da eficiência da **Árvore Trie** para sugestão instantânea:
