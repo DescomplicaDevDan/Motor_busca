@@ -1,0 +1,1 @@
+O projeto demonstra a aplicação de estruturas de dados avançadas. A raposa e o cão são amigos.
