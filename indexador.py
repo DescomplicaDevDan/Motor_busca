@@ -51,31 +51,6 @@ def pre_processar_texto(texto):
     texto = re.sub(r'[^a-z0-9áéíóúâêîôûãõç\s]', '', texto) 
     return [palavra for palavra in texto.split() if palavra]
        
-def construir_indice_a_partir_de_arquivos(pasta_documentos='documentos'):
-    
-    print(f"Iniciando indexação na pasta: {pasta_documentos}...")
-    
-    if not os.path.exists(pasta_documentos):
-        print(f"ERRO: A pasta '{pasta_documentos}' não foi encontrada.")
-        return
-
-    for nome_arquivo in os.listdir(pasta_documentos):
-        caminho_completo = os.path.join(pasta_documentos, nome_arquivo)
-        
-        if not nome_arquivo.endswith('.txt') or os.path.isdir(caminho_completo):
-            continue
-            
-        try:
-            with open(caminho_completo, 'r', encoding='utf-8') as f:
-                conteudo = f.read()
-            
-            doc_id = nome_arquivo
-            indexar_documento(doc_id, conteudo)
-            print(f" -> Documento indexado: {doc_id}")
-            
-        except Exception as e:
-            print(f"Erro ao processar {nome_arquivo}: {e}")
-
 def buscar(query):
 
     query_palavras = pre_processar_texto(query)
@@ -199,27 +174,28 @@ def calcular_tf_idf(query):
 
     pontuacoes = {doc_id: 0.0 for doc_id in DOCUMENTOS_IDS}
 
-    for palavra in query_palavras: # O loop começa aqui
+    for palavra in query_palavras:
         docs_com_termo = INDICE_INVERTIDO.get(palavra, {})
         
-        # CORREÇÃO: Este IF precisa estar indentado (dentro do loop)
         if not docs_com_termo:
             continue
 
         num_docs_com_termo = len(docs_com_termo)
+        # IDF (Inverse Document Frequency): log(N/número de docs com o termo)
         idf = math.log(N / num_docs_com_termo)
 
         for doc_id, freq_termo in docs_com_termo.items():
-            tf = freq_termo
+            tf = freq_termo # Frequência do Termo (Term Frequency)
             tf_idf = tf * idf
             pontuacoes[doc_id] += tf_idf
 
-        resultados_ordenados = [
-            (doc_id, pontuacao) 
-            for doc_id, pontuacao in pontuacoes.items() 
-            if pontuacao > 0
-        ]
-        resultados_ordenados.sort(key=lambda item: item[1], reverse=True)
+    # ATENÇÃO: ESTE BLOCO AGORA ESTÁ FORA DO LOOP 'for palavra in query_palavras:'
+    resultados_ordenados = [
+        (doc_id, pontuacao) 
+        for doc_id, pontuacao in pontuacoes.items() 
+        if pontuacao > 0
+    ]
+    resultados_ordenados.sort(key=lambda item: item[1], reverse=True)
     return resultados_ordenados
 
    
