@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import indexador
+
 class NoTrie:
     def __init__(self):
         self.filhos = {} 
@@ -22,6 +23,20 @@ try:
 
 except Exception as e:
     print(f"ERRO ao carregar o índice: {e}")
+
+
+@app.route('/buscar', methods=['POST'])
+def buscar_resultados():
+    
+    termo_buscado = request.form['consulta']
+    
+    resultados = indexador.calcular_tf_idf(termo_buscado)
+    
+    return render_template(
+        'busca.html', 
+        resultados=resultados, 
+        termo_buscado=termo_buscado
+    )
 
 @app.route('/')
 def pagina_inicial():
