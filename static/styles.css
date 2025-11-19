@@ -9,6 +9,7 @@ body {
     margin: 20px;
     background-color: #f4f4f4;
 }
+
 .container {
     max-width: 800px;
     margin: auto;
@@ -17,34 +18,78 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
 h1 {
     text-align: center;
     color: #333;
     margin-bottom: 30px;
 }
-form {
+
+.search-bar-container {
     display: flex;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 50px; /* Arredondamento */
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra */
 }
-input[type="text"] {
+
+
+/* 3. Estilo do Campo de Texto (Input) */
+.search-bar-container input[type="text"] {
     flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px 0 0 4px; 
+    padding: 5px 0; 
+    border: none;
+    outline: none; /* Remove o contorno ao focar */
     font-size: 16px;
+    color: #333;
 }
-button {
-    padding: 10px 20px;
-    background-color: #007bff;
+
+/* 4. Estilos Comuns para os Ícones */
+.search-icon, .mic-icon {
+    font-size: 24px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+/* 5. Estilo Específico para a Lupa (Círculo Verde) */
+.search-icon {
+    border-radius: 50%;
+    background-color: #00bfa5; /* Cor verde-água */
+    color: white;
+    margin-left: 5px; 
+    margin-right: 10px;
+    padding: 8px;
+}
+
+/* 6. Estilo Específico para o Microfone */
+.mic-icon {
+    color: #00bfa5;
+    padding: 8px 15px 8px 0;
+}
+
+.submit-button {
+    /* Estilo de botão moderno e compacto */
+    padding: 8px 15px; 
+    margin-right: 5px; /* Espaço na direita do contêiner */
+    background-color: #00bfa5; /* Cor verde-água */
     color: white;
     border: none;
-    border-radius: 0 4px 4px 0; 
+    border-radius: 50px; /* Arredondado para combinar com a barra */
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: bold;
+    /* Garante que o botão esteja no mesmo nível dos outros itens */
+    height: 40px; 
+    line-height: 24px; /* Centraliza o texto verticalmente */
 }
-button:hover {
-    background-color: #0056b3;
+
+.submit-button:hover {
+    background-color: #00887a; /* Feedback visual ao passar o mouse */
 }
+
 .resultado {
     border-bottom: 1px solid #eee;
     padding: 10px 0;
