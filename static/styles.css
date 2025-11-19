@@ -21,9 +21,15 @@ body {
 
 h1 {
     text-align: center;
-    color: #333;
+    color: #333333;
     margin-bottom: 30px;
 }
+
+h2 {
+    color: #333333;
+    margin-bottom: 5px;
+}
+
 
 .search-bar-container {
     display: flex;
@@ -96,7 +102,7 @@ h1 {
 }
 .resultado h3 {
     margin: 0 0 5px 0;
-    color: #1a0dab; 
+    color: #560967; 
 }
 .resultado p {
     margin: 0;
@@ -105,5 +111,5 @@ h1 {
 }
 .relevancia {
     font-weight: bold;
-    color: #009900;
+    color: #08987d;
 }
