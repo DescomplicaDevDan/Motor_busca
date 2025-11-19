@@ -54,3 +54,10 @@ Demonstração da eficiência da **Árvore Trie** para sugestão instantânea:
 | `"pr"` | `['preguiçoso', 'projeto']` |
 
 ---
+
+## ⚡ Como testar
+1. Clone o repo: `git clone ...`
+2. Execute: `python main.py`
+
+---
+Criado por Danilo Texeira | DescomplicaDevDan
