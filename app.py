@@ -1,5 +1,9 @@
 from flask import Flask, render_template, request
 import indexador
+class NoTrie:
+    def __init__(self):
+        self.filhos = {} 
+        self.fim_de_palavra = False
 
 app = Flask(__name__)
 
