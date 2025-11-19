@@ -1,11 +1,38 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Motor de Busca - Teste</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-    <h1>Servidor Flask em Execução!</h1>
-    <p>Se você está vendo esta mensagem, significa que o Servidor (app.py) e o carregamento do Índice (indexador.py) funcionaram. Podemos avançar!</p>
+    <div class="container">
+        <h1>🔍 Meu Motor de Busca TF-IDF</h1>
+
+        <form method="POST" action="/buscar">
+            <input type="text" name="consulta" placeholder="Digite sua busca..." required 
+                   value="{{ termo_buscado if termo_buscado else '' }}">
+            <button type="submit">Buscar</button>
+        </form>
+
+        {% if resultados %}
+            <h2>Resultados para "{{ termo_buscado }}"</h2>
+            <p>Total de {{ resultados|length }} documentos encontrados.</p>
+            
+            {% for doc, pontuacao in resultados %}
+                <div class="resultado">
+                    <h3>{{ doc }}</h3>
+                    <p>Relevância: <span class="relevancia">{{ "%.4f"|format(pontuacao) }}</span></p>
+                </div>
+            {% endfor %}
+
+        {% elif termo_buscado %}
+            <h2>Resultados para "{{ termo_buscado }}"</h2>
+            <p>Nenhum documento encontrado para sua consulta.</p>
+        {% endif %}
+
+    </div>
 </body>
 </html>
