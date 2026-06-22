@@ -101,6 +101,24 @@ h2 {
     background-color: #00887a; /* Feedback visual ao passar o mouse */
 }
 
+.modo-busca {
+    display: flex;
+    gap: 16px;
+    margin: -18px 0 28px;
+    padding: 0;
+    border: 0;
+    color: #545454;
+    font-size: 0.9em;
+}
+.modo-busca legend {
+    width: 100%;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+.modo-busca input {
+    accent-color: #00bfa5;
+}
+
 .resultado {
     border-bottom: 1px solid #eee;
     padding: 10px 0;

@@ -10,8 +10,11 @@ indexador.inicializar_indices()
 @app.route("/buscar", methods=["POST"])
 def buscar_resultados():
     termo_buscado = request.form.get("consulta", "").strip()
+    modo_busca = request.form.get("modo", "qualquer")
+    if modo_busca not in indexador.MODOS_BUSCA:
+        modo_busca = "qualquer"
     resultados = []
-    for doc_id, pontuacao in indexador.calcular_tf_idf(termo_buscado):
+    for doc_id, pontuacao in indexador.calcular_tf_idf(termo_buscado, modo_busca):
         trecho = indexador.obter_trecho(doc_id, termo_buscado)
         resultados.append(
             {
@@ -20,7 +23,9 @@ def buscar_resultados():
                 "partes_trecho": indexador.dividir_trecho_para_destaque(trecho, termo_buscado),
             }
         )
-    return render_template("busca.html", resultados=resultados, termo_buscado=termo_buscado)
+    return render_template(
+        "busca.html", resultados=resultados, termo_buscado=termo_buscado, modo_busca=modo_busca
+    )
 
 
 @app.get("/api/autocomplete")
@@ -45,7 +50,7 @@ def abrir_documento(nome_arquivo):
 
 @app.route("/")
 def pagina_inicial():
-    return render_template("busca.html")
+    return render_template("busca.html", modo_busca="qualquer")
 
 
 if __name__ == "__main__":

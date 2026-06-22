@@ -12,7 +12,7 @@
     <div class="container">
         <h1>🔍 Meu Motor de Busca TF-IDF</h1>
 
-    <form method="POST" action="/buscar" class="search-bar-container">
+    <form id="form-busca" method="POST" action="/buscar" class="search-bar-container">
         <i class="material-icons search-icon">search</i> 
         <div class="campo-consulta">
             <input id="campo-consulta" type="text" name="consulta" placeholder="Buscar documentos..." required
@@ -22,6 +22,11 @@
         <i class="material-icons mic-icon">mic</i> 
             <button type="submit" class="submit-button">Buscar</button> 
     </form>
+    <fieldset class="modo-busca">
+        <legend>Encontrar documentos com:</legend>
+        <label><input type="radio" name="modo" value="qualquer" form="form-busca" {% if modo_busca == "qualquer" %}checked{% endif %}> qualquer termo</label>
+        <label><input type="radio" name="modo" value="todos" form="form-busca" {% if modo_busca == "todos" %}checked{% endif %}> todos os termos</label>
+    </fieldset>
 
         {% if resultados %}
             <h2>Resultados para "{{ termo_buscado }}"</h2>

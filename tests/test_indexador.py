@@ -24,7 +24,7 @@ class TestIndexador(unittest.TestCase):
         # O conteúdo gravado contém apenas dados simples, nunca uma NoTrie.
         with self.arquivo_indice.open("rb") as arquivo:
             dados = pickle.load(arquivo)
-        self.assertEqual(set(dados), {"versao", "indice_invertido", "documentos_ids"})
+        self.assertEqual(set(dados), {"versao", "indice_invertido", "documentos_ids", "tamanhos_documentos"})
         self.assertEqual(dados["versao"], indexador.VERSAO_INDICE)
 
         indexador.INDICE_INVERTIDO.clear()
@@ -42,6 +42,27 @@ class TestIndexador(unittest.TestCase):
         partes = indexador.dividir_trecho_para_destaque("A Raposa ágil.", "raposa")
         self.assertEqual("".join(parte["texto"] for parte in partes), "A Raposa ágil.")
         self.assertEqual([parte["texto"] for parte in partes if parte["destacado"]], ["Raposa"])
+
+    def test_stopwords_nao_entram_na_consulta(self):
+        self.assertEqual(indexador.pre_processar_texto("A raposa e o cão para o rio"), ["raposa", "cão", "rio"])
+
+    def test_modo_todos_exige_cada_termo(self):
+        indexador.construir_indice_a_partir_de_arquivos(self.pasta)
+        self.assertEqual(
+            [doc_id for doc_id, _ in indexador.calcular_tf_idf("raposa ágil", modo="todos")], ["primeiro.txt"]
+        )
+        self.assertEqual(
+            {doc_id for doc_id, _ in indexador.calcular_tf_idf("raposa ágil", modo="qualquer")},
+            {"primeiro.txt", "segundo.txt"},
+        )
+
+    def test_cosseno_prefere_documento_curto_e_preciso(self):
+        (self.pasta / "curto.txt").write_text("raposa", encoding="utf-8")
+        (self.pasta / "longo.txt").write_text("raposa " + "contexto " * 100, encoding="utf-8")
+        indexador.construir_indice_a_partir_de_arquivos(self.pasta)
+
+        resultados = dict(indexador.calcular_tf_idf("raposa"))
+        self.assertGreater(resultados["curto.txt"], resultados["longo.txt"])
 
 
 if __name__ == "__main__":

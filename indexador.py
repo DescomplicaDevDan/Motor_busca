@@ -3,16 +3,25 @@
 import math
 import pickle
 import re
+from collections import Counter
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent
 ARQUIVO_INDICE_PADRAO = BASE_DIR / "motor_indice.pkl"
 PASTA_DOCUMENTOS_PADRAO = BASE_DIR / "documentos"
-VERSAO_INDICE = 2
+VERSAO_INDICE = 3
+
+# Palavras muito frequentes que pouco ajudam a diferenciar documentos.
+STOPWORDS_PT = {
+    "a", "as", "ao", "aos", "à", "às", "com", "como", "da", "das", "de", "do", "dos",
+    "e", "é", "em", "na", "nas", "no", "nos", "o", "os", "ou", "para", "por", "que", "um", "uma",
+}
+MODOS_BUSCA = {"qualquer", "todos"}
 
 INDICE_INVERTIDO = {}
 DOCUMENTOS_IDS = []
+TAMANHOS_DOCUMENTOS = {}
 
 
 class NoTrie:
@@ -60,23 +69,26 @@ def buscar_prefixo(prefixo):
     return palavras_com_prefixo
 
 
-def pre_processar_texto(texto):
+def pre_processar_texto(texto, remover_stopwords=True):
     texto = texto.lower()
     texto = re.sub(r"[^a-z0-9áéíóúâêîôûãõç\s]", "", texto)
-    return [palavra for palavra in texto.split() if palavra]
+    palavras = [palavra for palavra in texto.split() if palavra]
+    if remover_stopwords:
+        return [palavra for palavra in palavras if palavra not in STOPWORDS_PT]
+    return palavras
 
 
-def buscar(query):
+def buscar(query, modo="todos"):
     """Busca booleana: retorna documentos que contêm todas as palavras."""
     query_palavras = pre_processar_texto(query)
-    if not query_palavras:
+    if not query_palavras or modo not in MODOS_BUSCA:
         return []
 
-    documentos_encontrados = set(INDICE_INVERTIDO.get(query_palavras[0], {}))
-    for palavra in query_palavras[1:]:
-        documentos_encontrados &= set(INDICE_INVERTIDO.get(palavra, {}))
-        if not documentos_encontrados:
-            return []
+    conjuntos_documentos = [set(INDICE_INVERTIDO.get(palavra, {})) for palavra in query_palavras]
+    if modo == "todos":
+        documentos_encontrados = set.intersection(*conjuntos_documentos)
+    else:
+        documentos_encontrados = set.union(*conjuntos_documentos)
     return sorted(documentos_encontrados)
 
 
@@ -91,6 +103,7 @@ def salvar_indice(indice_file=ARQUIVO_INDICE_PADRAO):
         "versao": VERSAO_INDICE,
         "indice_invertido": INDICE_INVERTIDO,
         "documentos_ids": DOCUMENTOS_IDS,
+        "tamanhos_documentos": TAMANHOS_DOCUMENTOS,
     }
     try:
         with indice_file.open("wb") as arquivo:
@@ -117,13 +130,16 @@ def carregar_indice(indice_file=ARQUIVO_INDICE_PADRAO):
             raise ValueError("versão de índice antiga ou desconhecida")
         indice = dados_carregados["indice_invertido"]
         documentos = dados_carregados["documentos_ids"]
-        if not isinstance(indice, dict) or not isinstance(documentos, list):
+        tamanhos = dados_carregados["tamanhos_documentos"]
+        if not isinstance(indice, dict) or not isinstance(documentos, list) or not isinstance(tamanhos, dict):
             raise ValueError("formato de índice inválido")
 
         INDICE_INVERTIDO.clear()
         INDICE_INVERTIDO.update(indice)
         DOCUMENTOS_IDS.clear()
         DOCUMENTOS_IDS.extend(documentos)
+        TAMANHOS_DOCUMENTOS.clear()
+        TAMANHOS_DOCUMENTOS.update(tamanhos)
         reconstruir_trie()
         print("Índice carregado com sucesso.")
         return True
@@ -134,6 +150,7 @@ def carregar_indice(indice_file=ARQUIVO_INDICE_PADRAO):
 
 def indexar_documento(doc_id, texto):
     palavras = pre_processar_texto(texto)
+    TAMANHOS_DOCUMENTOS[doc_id] = len(palavras)
     frequencia_local = {}
     for palavra in palavras:
         frequencia_local[palavra] = frequencia_local.get(palavra, 0) + 1
@@ -147,6 +164,7 @@ def construir_indice_a_partir_de_arquivos(pasta_documentos=PASTA_DOCUMENTOS_PADR
     pasta_documentos = Path(pasta_documentos)
     INDICE_INVERTIDO.clear()
     DOCUMENTOS_IDS.clear()
+    TAMANHOS_DOCUMENTOS.clear()
 
     if not pasta_documentos.exists():
         raise FileNotFoundError(f"Pasta de documentos não encontrada: {pasta_documentos}")
@@ -168,24 +186,62 @@ def inicializar_indices():
             raise RuntimeError("O índice foi criado, mas não pôde ser salvo.")
 
 
-def calcular_tf_idf(query):
+def _calcular_idf(palavra):
+    """IDF suavizado: termos muito comuns ainda recebem peso mínimo."""
+    quantidade_documentos = len(DOCUMENTOS_IDS)
+    quantidade_com_termo = len(INDICE_INVERTIDO.get(palavra, {}))
+    return math.log((quantidade_documentos + 1) / (quantidade_com_termo + 1)) + 1
+
+
+def _calcular_normas_documentos():
+    """Calcula o tamanho de cada vetor TF-IDF normalizado."""
+    normas_quadradas = {doc_id: 0.0 for doc_id in DOCUMENTOS_IDS}
+    for palavra, ocorrencias in INDICE_INVERTIDO.items():
+        idf = _calcular_idf(palavra)
+        for doc_id, frequencia in ocorrencias.items():
+            tf_normalizado = frequencia / TAMANHOS_DOCUMENTOS[doc_id]
+            normas_quadradas[doc_id] += (tf_normalizado * idf) ** 2
+    return {doc_id: math.sqrt(norma) for doc_id, norma in normas_quadradas.items()}
+
+
+def calcular_tf_idf(query, modo="qualquer"):
+    """Ranqeia documentos por similaridade do cosseno entre vetores TF-IDF."""
     query_palavras = pre_processar_texto(query)
-    if not query_palavras or not DOCUMENTOS_IDS:
+    if not query_palavras or not DOCUMENTOS_IDS or modo not in MODOS_BUSCA:
         return []
 
-    quantidade_documentos = len(DOCUMENTOS_IDS)
-    pontuacoes = {doc_id: 0.0 for doc_id in DOCUMENTOS_IDS}
+    conjuntos_documentos = [set(INDICE_INVERTIDO.get(palavra, {})) for palavra in query_palavras]
+    if modo == "todos":
+        documentos_candidatos = set.intersection(*conjuntos_documentos)
+    else:
+        documentos_candidatos = set.union(*conjuntos_documentos)
+    if not documentos_candidatos:
+        return []
 
-    for palavra in query_palavras:
-        docs_com_termo = INDICE_INVERTIDO.get(palavra, {})
-        if not docs_com_termo:
-            continue
+    frequencias_consulta = Counter(query_palavras)
+    tamanho_consulta = len(query_palavras)
+    pesos_consulta = {
+        palavra: (frequencia / tamanho_consulta) * _calcular_idf(palavra)
+        for palavra, frequencia in frequencias_consulta.items()
+        if palavra in INDICE_INVERTIDO
+    }
+    norma_consulta = math.sqrt(sum(peso ** 2 for peso in pesos_consulta.values()))
+    if not norma_consulta:
+        return []
 
-        idf = math.log(quantidade_documentos / len(docs_com_termo))
-        for doc_id, frequencia_termo in docs_com_termo.items():
-            pontuacoes[doc_id] += frequencia_termo * idf
+    normas_documentos = _calcular_normas_documentos()
+    produtos_escalares = {doc_id: 0.0 for doc_id in documentos_candidatos}
+    for palavra, peso_consulta in pesos_consulta.items():
+        for doc_id, frequencia in INDICE_INVERTIDO[palavra].items():
+            if doc_id in produtos_escalares:
+                tf_normalizado = frequencia / TAMANHOS_DOCUMENTOS[doc_id]
+                produtos_escalares[doc_id] += peso_consulta * tf_normalizado * _calcular_idf(palavra)
 
-    resultados = [(doc_id, pontuacao) for doc_id, pontuacao in pontuacoes.items() if pontuacao > 0]
+    resultados = [
+        (doc_id, produto / (norma_consulta * normas_documentos[doc_id]))
+        for doc_id, produto in produtos_escalares.items()
+        if normas_documentos[doc_id] and produto > 0
+    ]
     return sorted(resultados, key=lambda item: item[1], reverse=True)
 
 
