@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre | Motor de Busca</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <main class="container sobre">
+        <header class="cabecalho">
+            <a class="marca" href="{{ url_for('pagina_inicial') }}">🔍 Motor de Busca</a>
+            <nav class="navegacao" aria-label="Navegação principal">
+                <a href="{{ url_for('pagina_inicial') }}">Buscar</a>
+                <a href="{{ url_for('pagina_sobre') }}" aria-current="page">Sobre o projeto</a>
+            </nav>
+        </header>
+
+        <section class="apresentacao">
+            <p class="rotulo">Projeto de recuperação de informação</p>
+            <h1>Do documento bruto ao resultado relevante.</h1>
+            <p>Este projeto implementa um motor de busca em Python e Flask para demonstrar como estruturas de dados, ranqueamento e uma interface web trabalham juntas.</p>
+        </section>
+
+        <section>
+            <h2>Fluxo de uma busca</h2>
+            <ol class="fluxo-busca">
+                <li><strong>Pré-processamento:</strong> normaliza o texto e remove stopwords em português.</li>
+                <li><strong>Índice invertido:</strong> localiza rapidamente os documentos que contêm cada termo.</li>
+                <li><strong>Ranqueamento:</strong> usa TF-IDF normalizado e similaridade do cosseno.</li>
+                <li><strong>Apresentação:</strong> mostra trechos, termos destacados e links para os documentos.</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Decisões de engenharia</h2>
+            <div class="cartoes-arquitetura">
+                <article>
+                    <h3>Trie para autocomplete</h3>
+                    <p>Busca sugestões por prefixo enquanto a pessoa digita, sem percorrer todos os termos do índice.</p>
+                </article>
+                <article>
+                    <h3>JSON para persistência</h3>
+                    <p>O índice é legível, não executa código ao ser carregado e a Trie é reconstruída em memória.</p>
+                </article>
+                <article>
+                    <h3>Interface e API</h3>
+                    <p>A interface HTML e a API JSON compartilham a mesma regra de ranqueamento para evitar resultados inconsistentes.</p>
+                </article>
+                <article>
+                    <h3>Qualidade contínua</h3>
+                    <p>Testes cobrem o motor e as rotas Flask, enquanto o GitHub Actions os executa a cada alteração enviada.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="proximos-passos">
+            <h2>O que este projeto demonstra</h2>
+            <p>Modelagem de dados, algoritmos de busca, normalização de texto, desenvolvimento web, API REST, testes automatizados e integração contínua.</p>
+            <a class="botao-secundario" href="{{ url_for('pagina_inicial') }}">Experimentar a busca</a>
+        </section>
+    </main>
+</body>
+</html>

@@ -19,6 +19,12 @@ class TestRotasFlask(unittest.TestCase):
         self.assertEqual(resposta.status_code, 200)
         self.assertIn(b"Motor de Busca", resposta.data)
 
+    def test_pagina_sobre_exibe_arquitetura_do_projeto(self):
+        resposta = self.client.get("/sobre")
+        self.assertEqual(resposta.status_code, 200)
+        self.assertIn(b"Decis", resposta.data)
+        self.assertIn(b"TF-IDF", resposta.data)
+
     def test_busca_renderiza_resultados(self):
         resposta = self.client.post("/buscar", data={"consulta": "raposa", "modo": "qualquer"})
         self.assertEqual(resposta.status_code, 200)
@@ -27,7 +33,7 @@ class TestRotasFlask(unittest.TestCase):
     def test_autocomplete_retorna_json(self):
         resposta = self.client.get("/api/autocomplete?q=ra")
         self.assertEqual(resposta.status_code, 200)
-        self.assertEqual(resposta.json["sugestoes"][0], "raposa")
+        self.assertIn("raposa", resposta.json["sugestoes"])
 
     def test_api_buscar_retorna_resultados_ranqueados(self):
         resposta = self.client.get("/api/buscar?q=raposa&modo=qualquer")

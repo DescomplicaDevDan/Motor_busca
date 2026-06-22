@@ -10,7 +10,14 @@
 
 <body>
     <div class="container">
-        <h1>🔍 Meu Motor de Busca TF-IDF</h1>
+        <header class="cabecalho">
+            <a class="marca" href="{{ url_for('pagina_inicial') }}">🔍 Motor de Busca</a>
+            <nav class="navegacao" aria-label="Navegação principal">
+                <a href="{{ url_for('pagina_inicial') }}" aria-current="page">Buscar</a>
+                <a href="{{ url_for('pagina_sobre') }}">Sobre o projeto</a>
+            </nav>
+        </header>
+        <h1>Pesquisa por relevância</h1>
 
     <form id="form-busca" method="POST" action="/buscar" class="search-bar-container">
         <i class="material-icons search-icon">search</i> 
