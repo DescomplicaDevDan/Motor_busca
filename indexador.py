@@ -221,6 +221,28 @@ def obter_trecho(doc_id, query, antes=70, depois=110):
     return trecho
 
 
+def dividir_trecho_para_destaque(trecho, query):
+    """Separa o trecho e informa quais partes correspondem à consulta.
+
+    A função não gera HTML. Ela devolve texto puro e um sinal booleano para o
+    template decidir onde usar a marcação visual, preservando o autoescape do
+    Jinja.
+    """
+    termos = pre_processar_texto(query)
+    if not trecho or not termos:
+        return [{"texto": trecho, "destacado": False}] if trecho else []
+
+    padrao = re.compile(
+        r"\b(" + "|".join(re.escape(termo) for termo in termos) + r")\b",
+        flags=re.IGNORECASE,
+    )
+    return [
+        {"texto": parte, "destacado": bool(padrao.fullmatch(parte))}
+        for parte in padrao.split(trecho)
+        if parte
+    ]
+
+
 if __name__ == "__main__":
     inicializar_indices()
     print("\n--- Índices prontos para uso ---")

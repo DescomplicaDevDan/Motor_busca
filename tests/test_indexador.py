@@ -38,6 +38,11 @@ class TestIndexador(unittest.TestCase):
         trecho = indexador.obter_trecho("primeiro.txt", "raposa")
         self.assertIn("Raposa ágil", trecho)
 
+    def test_dividir_trecho_destaca_termo_sem_alterar_o_texto(self):
+        partes = indexador.dividir_trecho_para_destaque("A Raposa ágil.", "raposa")
+        self.assertEqual("".join(parte["texto"] for parte in partes), "A Raposa ágil.")
+        self.assertEqual([parte["texto"] for parte in partes if parte["destacado"]], ["Raposa"])
+
 
 if __name__ == "__main__":
     unittest.main()

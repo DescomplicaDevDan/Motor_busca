@@ -114,6 +114,12 @@ h2 {
     color: #333;
     line-height: 1.5;
 }
+.trecho mark {
+    background-color: #fff3a3;
+    color: inherit;
+    border-radius: 3px;
+    padding: 1px 3px;
+}
 .relevancia {
     font-weight: bold;
     color: #08987d;

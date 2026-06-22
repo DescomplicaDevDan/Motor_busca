@@ -29,7 +29,11 @@
             {% for resultado in resultados %}
                 <div class="resultado">
                     <h3>{{ resultado.documento }}</h3>
-                    <p class="trecho">{{ resultado.trecho }}</p>
+                    <p class="trecho">
+                        {% for parte in resultado.partes_trecho %}
+                            {% if parte.destacado %}<mark>{{ parte.texto }}</mark>{% else %}{{ parte.texto }}{% endif %}
+                        {% endfor %}
+                    </p>
                     <p>Relevância: <span class="relevancia">{{ "%.4f"|format(resultado.pontuacao) }}</span></p>
                 </div>
             {% endfor %}
