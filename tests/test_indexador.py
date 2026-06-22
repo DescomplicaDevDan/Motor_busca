@@ -64,6 +64,21 @@ class TestIndexador(unittest.TestCase):
         resultados = dict(indexador.calcular_tf_idf("raposa"))
         self.assertGreater(resultados["curto.txt"], resultados["longo.txt"])
 
+    def test_busca_booleana_aceita_qualquer_ou_todos_os_termos(self):
+        indexador.construir_indice_a_partir_de_arquivos(self.pasta)
+        self.assertEqual(indexador.buscar("raposa ágil", modo="todos"), ["primeiro.txt"])
+        self.assertEqual(indexador.buscar("raposa ágil", modo="qualquer"), ["primeiro.txt", "segundo.txt"])
+
+    def test_consulta_sem_termos_uteis_nao_retorna_resultados(self):
+        indexador.construir_indice_a_partir_de_arquivos(self.pasta)
+        self.assertEqual(indexador.calcular_tf_idf("a e o para"), [])
+        self.assertEqual(indexador.calcular_tf_idf("raposa", modo="invalido"), [])
+
+    def test_indice_corrompido_e_recusado(self):
+        indice_corrompido = self.pasta / "corrompido.pkl"
+        indice_corrompido.write_text("este arquivo não é um pickle", encoding="utf-8")
+        self.assertFalse(indexador.carregar_indice(indice_corrompido))
+
 
 if __name__ == "__main__":
     unittest.main()
