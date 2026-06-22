@@ -29,6 +29,21 @@ class TestRotasFlask(unittest.TestCase):
         self.assertEqual(resposta.status_code, 200)
         self.assertEqual(resposta.json["sugestoes"][0], "raposa")
 
+    def test_api_buscar_retorna_resultados_ranqueados(self):
+        resposta = self.client.get("/api/buscar?q=raposa&modo=qualquer")
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.json["consulta"], "raposa")
+        self.assertGreater(resposta.json["total"], 0)
+        self.assertIn("relevancia", resposta.json["resultados"][0])
+        self.assertIn("url", resposta.json["resultados"][0])
+
+    def test_api_buscar_rejeita_consulta_ou_modo_invalidos(self):
+        sem_consulta = self.client.get("/api/buscar")
+        modo_invalido = self.client.get("/api/buscar?q=raposa&modo=invalido")
+        self.assertEqual(sem_consulta.status_code, 400)
+        self.assertEqual(modo_invalido.status_code, 400)
+        self.assertIn("modos_aceitos", modo_invalido.json)
+
     def test_documento_indexado_pode_ser_aberto(self):
         resposta = self.client.get("/documentos/doc1.txt")
         try:

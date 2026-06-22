@@ -57,6 +57,18 @@ python app.py
 Abra `http://127.0.0.1:5000` no navegador. Na primeira execução, o índice é
 criado automaticamente.
 
+## API JSON
+
+Além da interface web, o projeto expõe a busca ranqueada em JSON:
+
+```text
+GET /api/buscar?q=raposa&modo=qualquer
+```
+
+O parâmetro `modo` aceita `qualquer` (padrão) ou `todos`. A resposta informa a
+consulta, o total e, para cada resultado, o documento, a relevância, o trecho
+e a URL para abrir o arquivo.
+
 ## Verificar o motor sem abrir o navegador
 
 ```bash

@@ -1,4 +1,4 @@
-from flask import Flask, abort, jsonify, render_template, request, send_from_directory
+from flask import Flask, abort, jsonify, render_template, request, send_from_directory, url_for
 
 import indexador
 
@@ -7,24 +7,61 @@ app = Flask(__name__)
 indexador.inicializar_indices()
 
 
+def buscar_com_detalhes(consulta, modo_busca):
+    """Executa o ranqueamento e acrescenta o trecho de cada resultado."""
+    resultados = []
+    for doc_id, pontuacao in indexador.calcular_tf_idf(consulta, modo_busca):
+        resultados.append(
+            {
+                "documento": doc_id,
+                "pontuacao": pontuacao,
+                "trecho": indexador.obter_trecho(doc_id, consulta),
+            }
+        )
+    return resultados
+
+
 @app.route("/buscar", methods=["POST"])
 def buscar_resultados():
     termo_buscado = request.form.get("consulta", "").strip()
     modo_busca = request.form.get("modo", "qualquer")
     if modo_busca not in indexador.MODOS_BUSCA:
         modo_busca = "qualquer"
-    resultados = []
-    for doc_id, pontuacao in indexador.calcular_tf_idf(termo_buscado, modo_busca):
-        trecho = indexador.obter_trecho(doc_id, termo_buscado)
-        resultados.append(
-            {
-                "documento": doc_id,
-                "pontuacao": pontuacao,
-                "partes_trecho": indexador.dividir_trecho_para_destaque(trecho, termo_buscado),
-            }
-        )
+    resultados = buscar_com_detalhes(termo_buscado, modo_busca)
+    for resultado in resultados:
+        resultado["partes_trecho"] = indexador.dividir_trecho_para_destaque(resultado["trecho"], termo_buscado)
     return render_template(
         "busca.html", resultados=resultados, termo_buscado=termo_buscado, modo_busca=modo_busca
+    )
+
+
+@app.get("/api/buscar")
+def api_buscar():
+    """Expõe a busca ranqueada em JSON para outros clientes consumirem."""
+    consulta = request.args.get("q", "").strip()
+    modo_busca = request.args.get("modo", "qualquer")
+
+    if not consulta:
+        return jsonify({"erro": "Informe o parâmetro de consulta 'q'."}), 400
+    if modo_busca not in indexador.MODOS_BUSCA:
+        return jsonify({"erro": "Modo inválido.", "modos_aceitos": sorted(indexador.MODOS_BUSCA)}), 400
+
+    resultados = buscar_com_detalhes(consulta, modo_busca)
+    return jsonify(
+        {
+            "consulta": consulta,
+            "modo": modo_busca,
+            "total": len(resultados),
+            "resultados": [
+                {
+                    "documento": resultado["documento"],
+                    "relevancia": round(resultado["pontuacao"], 6),
+                    "trecho": resultado["trecho"],
+                    "url": url_for("abrir_documento", nome_arquivo=resultado["documento"]),
+                }
+                for resultado in resultados
+            ],
+        }
     )
 
 
