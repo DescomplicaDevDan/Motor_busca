@@ -10,6 +10,8 @@ class TestIndexador(unittest.TestCase):
     def setUp(self):
         self.pasta_temporaria = tempfile.TemporaryDirectory()
         self.addCleanup(self.pasta_temporaria.cleanup)
+        self.pasta_documentos_original = indexador.PASTA_DOCUMENTOS_PADRAO
+        self.addCleanup(setattr, indexador, "PASTA_DOCUMENTOS_PADRAO", self.pasta_documentos_original)
         self.pasta = Path(self.pasta_temporaria.name)
         (self.pasta / "primeiro.txt").write_text("Raposa ágil", encoding="utf-8")
         (self.pasta / "segundo.txt").write_text("Raposa preguiçosa", encoding="utf-8")
@@ -30,6 +32,11 @@ class TestIndexador(unittest.TestCase):
         self.assertTrue(indexador.carregar_indice(self.arquivo_indice))
         self.assertEqual(indexador.buscar("raposa"), ["primeiro.txt", "segundo.txt"])
         self.assertEqual(indexador.buscar_prefixo("ra"), ["raposa"])
+
+    def test_obter_trecho_mostra_o_contexto_do_termo(self):
+        indexador.PASTA_DOCUMENTOS_PADRAO = self.pasta
+        trecho = indexador.obter_trecho("primeiro.txt", "raposa")
+        self.assertIn("Raposa ágil", trecho)
 
 
 if __name__ == "__main__":

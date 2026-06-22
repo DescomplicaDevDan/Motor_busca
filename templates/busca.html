@@ -26,10 +26,11 @@
             <h2>Resultados para "{{ termo_buscado }}"</h2>
             <p>Total de {{ resultados|length }} documentos encontrados.</p>
             
-            {% for doc, pontuacao in resultados %}
+            {% for resultado in resultados %}
                 <div class="resultado">
-                    <h3>{{ doc }}</h3>
-                    <p>Relevância: <span class="relevancia">{{ "%.4f"|format(pontuacao) }}</span></p>
+                    <h3>{{ resultado.documento }}</h3>
+                    <p class="trecho">{{ resultado.trecho }}</p>
+                    <p>Relevância: <span class="relevancia">{{ "%.4f"|format(resultado.pontuacao) }}</span></p>
                 </div>
             {% endfor %}
 

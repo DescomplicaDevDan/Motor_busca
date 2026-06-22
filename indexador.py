@@ -189,6 +189,38 @@ def calcular_tf_idf(query):
     return sorted(resultados, key=lambda item: item[1], reverse=True)
 
 
+def obter_trecho(doc_id, query, antes=70, depois=110):
+    """Retorna uma janela do documento centrada no primeiro termo buscado.
+
+    O índice guarda frequências, não o texto completo. Por isso o trecho é
+    lido apenas para os documentos que já foram escolhidos pelo ranqueamento.
+    """
+    termos = pre_processar_texto(query)
+    if not termos:
+        return ""
+
+    caminho_documento = PASTA_DOCUMENTOS_PADRAO / doc_id
+    try:
+        texto = caminho_documento.read_text(encoding="utf-8")
+    except OSError:
+        return ""
+
+    padrao = r"\b(" + "|".join(re.escape(termo) for termo in termos) + r")\b"
+    ocorrencia = re.search(padrao, texto, flags=re.IGNORECASE)
+    if not ocorrencia:
+        return ""
+
+    inicio = max(0, ocorrencia.start() - antes)
+    fim = min(len(texto), ocorrencia.end() + depois)
+    trecho = " ".join(texto[inicio:fim].split())
+
+    if inicio > 0:
+        trecho = "… " + trecho
+    if fim < len(texto):
+        trecho += " …"
+    return trecho
+
+
 if __name__ == "__main__":
     inicializar_indices()
     print("\n--- Índices prontos para uso ---")
