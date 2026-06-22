@@ -34,7 +34,21 @@ body {
 }
 .navegacao {
     display: flex;
+    align-items: center;
     gap: 14px;
+}
+.botao-reindexar {
+    padding: 5px 9px;
+    border: 1px solid #00bfa5;
+    border-radius: 50px;
+    background: white;
+    color: #00887a;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.botao-reindexar:hover {
+    background: #e8faf7;
 }
 .navegacao a {
     color: #545454;
@@ -51,6 +65,38 @@ h1 {
     text-align: center;
     color: #333333;
     margin-bottom: 30px;
+}
+
+.mensagem-sucesso {
+    margin: -14px 0 18px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #e8faf7;
+    color: #087968;
+}
+.estatisticas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    overflow: hidden;
+    margin: 0 0 24px;
+    border: 1px solid #d8eeea;
+    border-radius: 8px;
+    background: #d8eeea;
+}
+.estatisticas div {
+    display: grid;
+    gap: 3px;
+    padding: 12px;
+    background: #f6fcfb;
+}
+.estatisticas strong {
+    color: #00887a;
+    font-size: 1.1rem;
+}
+.estatisticas span {
+    color: #545454;
+    font-size: 0.8rem;
 }
 
 .sobre h1 {

@@ -184,6 +184,22 @@ def inicializar_indices():
             raise RuntimeError("O índice foi criado, mas não pôde ser salvo.")
 
 
+def reindexar(pasta_documentos=PASTA_DOCUMENTOS_PADRAO, indice_file=ARQUIVO_INDICE_PADRAO):
+    """Reconstrói e persiste o índice sem exigir reinício da aplicação."""
+    construir_indice_a_partir_de_arquivos(pasta_documentos)
+    if not salvar_indice(indice_file):
+        raise RuntimeError("O índice foi reconstruído, mas não pôde ser salvo.")
+    return obter_estatisticas()
+
+
+def obter_estatisticas():
+    """Retorna métricas simples do índice atual para interface e API."""
+    return {
+        "documentos_indexados": len(DOCUMENTOS_IDS),
+        "palavras_indexadas": len(INDICE_INVERTIDO),
+    }
+
+
 def _calcular_idf(palavra):
     """IDF suavizado: termos muito comuns ainda recebem peso mínimo."""
     quantidade_documentos = len(DOCUMENTOS_IDS)

@@ -79,6 +79,17 @@ class TestIndexador(unittest.TestCase):
         indice_corrompido.write_text("este arquivo não é um JSON", encoding="utf-8")
         self.assertFalse(indexador.carregar_indice(indice_corrompido))
 
+    def test_reindexar_atualiza_indice_e_estatisticas(self):
+        estatisticas_iniciais = indexador.reindexar(self.pasta, self.arquivo_indice)
+        (self.pasta / "terceiro.txt").write_text("Castor constrói uma represa", encoding="utf-8")
+
+        estatisticas_atualizadas = indexador.reindexar(self.pasta, self.arquivo_indice)
+
+        self.assertEqual(estatisticas_iniciais["documentos_indexados"], 2)
+        self.assertEqual(estatisticas_atualizadas["documentos_indexados"], 3)
+        self.assertIn("terceiro.txt", indexador.buscar("castor"))
+        self.assertGreater(estatisticas_atualizadas["palavras_indexadas"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

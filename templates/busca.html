@@ -15,9 +15,23 @@
             <nav class="navegacao" aria-label="Navegação principal">
                 <a href="{{ url_for('pagina_inicial') }}" aria-current="page">Buscar</a>
                 <a href="{{ url_for('pagina_sobre') }}">Sobre o projeto</a>
+                <form action="{{ url_for('reindexar_documentos') }}" method="post">
+                    <button class="botao-reindexar" type="submit">Reindexar</button>
+                </form>
             </nav>
         </header>
         <h1>Pesquisa por relevância</h1>
+
+        {% if reindexado %}
+            <p class="mensagem-sucesso">Índice atualizado com os arquivos atuais.</p>
+        {% endif %}
+        <section class="estatisticas" aria-label="Estatísticas do índice">
+            <div><strong>{{ estatisticas.documentos_indexados }}</strong><span>documentos indexados</span></div>
+            <div><strong>{{ estatisticas.palavras_indexadas }}</strong><span>palavras no índice</span></div>
+            {% if tempo_busca_ms is defined %}
+                <div><strong>{{ tempo_busca_ms }} ms</strong><span>tempo da busca</span></div>
+            {% endif %}
+        </section>
 
     <form id="form-busca" method="POST" action="/buscar" class="search-bar-container">
         <i class="material-icons search-icon">search</i> 

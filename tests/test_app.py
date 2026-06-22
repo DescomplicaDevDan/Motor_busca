@@ -18,6 +18,7 @@ class TestRotasFlask(unittest.TestCase):
         resposta = self.client.get("/")
         self.assertEqual(resposta.status_code, 200)
         self.assertIn(b"Motor de Busca", resposta.data)
+        self.assertIn(b"documentos indexados", resposta.data)
 
     def test_pagina_sobre_exibe_arquitetura_do_projeto(self):
         resposta = self.client.get("/sobre")
@@ -29,6 +30,12 @@ class TestRotasFlask(unittest.TestCase):
         resposta = self.client.post("/buscar", data={"consulta": "raposa", "modo": "qualquer"})
         self.assertEqual(resposta.status_code, 200)
         self.assertIn(b"doc1.txt", resposta.data)
+        self.assertIn(b"tempo da busca", resposta.data)
+
+    def test_reindexar_atualiza_indice_sem_reiniciar_servidor(self):
+        resposta = self.client.post("/reindexar", follow_redirects=True)
+        self.assertEqual(resposta.status_code, 200)
+        self.assertIn("Índice atualizado".encode(), resposta.data)
 
     def test_autocomplete_retorna_json(self):
         resposta = self.client.get("/api/autocomplete?q=ra")
