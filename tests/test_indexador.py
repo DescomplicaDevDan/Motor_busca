@@ -1,4 +1,4 @@
-import pickle
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -15,15 +15,15 @@ class TestIndexador(unittest.TestCase):
         self.pasta = Path(self.pasta_temporaria.name)
         (self.pasta / "primeiro.txt").write_text("Raposa ágil", encoding="utf-8")
         (self.pasta / "segundo.txt").write_text("Raposa preguiçosa", encoding="utf-8")
-        self.arquivo_indice = self.pasta / "indice.pkl"
+        self.arquivo_indice = self.pasta / "indice.json"
 
     def test_indice_persistido_reconstroi_a_trie(self):
         indexador.construir_indice_a_partir_de_arquivos(self.pasta)
         self.assertTrue(indexador.salvar_indice(self.arquivo_indice))
 
-        # O conteúdo gravado contém apenas dados simples, nunca uma NoTrie.
-        with self.arquivo_indice.open("rb") as arquivo:
-            dados = pickle.load(arquivo)
+        # O conteúdo gravado é JSON legível e contém somente dados simples.
+        with self.arquivo_indice.open(encoding="utf-8") as arquivo:
+            dados = json.load(arquivo)
         self.assertEqual(set(dados), {"versao", "indice_invertido", "documentos_ids", "tamanhos_documentos"})
         self.assertEqual(dados["versao"], indexador.VERSAO_INDICE)
 
@@ -75,8 +75,8 @@ class TestIndexador(unittest.TestCase):
         self.assertEqual(indexador.calcular_tf_idf("raposa", modo="invalido"), [])
 
     def test_indice_corrompido_e_recusado(self):
-        indice_corrompido = self.pasta / "corrompido.pkl"
-        indice_corrompido.write_text("este arquivo não é um pickle", encoding="utf-8")
+        indice_corrompido = self.pasta / "corrompido.json"
+        indice_corrompido.write_text("este arquivo não é um JSON", encoding="utf-8")
         self.assertFalse(indexador.carregar_indice(indice_corrompido))
 
 

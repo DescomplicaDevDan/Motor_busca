@@ -17,14 +17,13 @@ permite buscas e ordena os resultados por relevância.
 
 ## Persistência do índice
 
-O arquivo `motor_indice.pkl` armazena apenas o índice invertido e a lista de
-documentos, que são dicionários, listas e números. A Trie não é salva: ela é
+O arquivo `motor_indice.json` armazena o índice invertido, a lista e os
+tamanhos dos documentos como JSON legível. A Trie não é salva: ela é
 reconstruída a partir das palavras do índice quando o programa inicia.
 
-Isso é importante porque serializar uma instância da classe `NoTrie` faz o
-`pickle` depender do nome do módulo que criou o arquivo. Se o programa for
-executado de outra forma — por exemplo, importado pelo Vercel — o índice pode
-deixar de abrir. Dados simples evitam essa fragilidade.
+JSON evita a dependência de classes Python e não executa código ao ser lido,
+ao contrário de `pickle`. Isso torna o formato mais seguro para persistência e
+mais fácil de inspecionar no repositório.
 
 Se o índice estiver ausente, antigo ou inválido, o projeto o recria
 automaticamente com os arquivos em `documentos/`.
@@ -79,5 +78,5 @@ python -m unittest discover -s tests -v
 O primeiro comando mostra exemplos de busca e autocomplete. O segundo verifica
 que o índice é persistido sem objetos da Trie e pode ser carregado novamente.
 
-> Não carregue arquivos `.pkl` recebidos de fontes não confiáveis: `pickle`
-> não é um formato seguro para dados externos.
+> Embora JSON não execute código ao ser lido, o projeto ainda valida a versão
+> e a estrutura do índice antes de usá-lo.

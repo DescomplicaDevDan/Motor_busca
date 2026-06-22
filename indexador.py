@@ -1,16 +1,16 @@
 """Indexação, busca e persistência do motor de busca."""
 
 import math
-import pickle
+import json
 import re
 from collections import Counter
 from pathlib import Path
 
 
 BASE_DIR = Path(__file__).resolve().parent
-ARQUIVO_INDICE_PADRAO = BASE_DIR / "motor_indice.pkl"
+ARQUIVO_INDICE_PADRAO = BASE_DIR / "motor_indice.json"
 PASTA_DOCUMENTOS_PADRAO = BASE_DIR / "documentos"
-VERSAO_INDICE = 3
+VERSAO_INDICE = 4
 
 # Palavras muito frequentes que pouco ajudam a diferenciar documentos.
 STOPWORDS_PT = {
@@ -93,12 +93,9 @@ def buscar(query, modo="todos"):
 
 
 def salvar_indice(indice_file=ARQUIVO_INDICE_PADRAO):
-    """Salva somente tipos simples; a Trie é reconstruída na leitura.
-
-    Não serializar objetos ``NoTrie`` evita que o pickle dependa do nome do
-    módulo que estava em execução quando o índice foi criado.
-    """
+    """Salva somente dados simples em JSON; a Trie é reconstruída na leitura."""
     indice_file = Path(indice_file)
+    arquivo_temporario = indice_file.with_suffix(indice_file.suffix + ".tmp")
     dados_a_salvar = {
         "versao": VERSAO_INDICE,
         "indice_invertido": INDICE_INVERTIDO,
@@ -106,11 +103,12 @@ def salvar_indice(indice_file=ARQUIVO_INDICE_PADRAO):
         "tamanhos_documentos": TAMANHOS_DOCUMENTOS,
     }
     try:
-        with indice_file.open("wb") as arquivo:
-            pickle.dump(dados_a_salvar, arquivo)
+        with arquivo_temporario.open("w", encoding="utf-8") as arquivo:
+            json.dump(dados_a_salvar, arquivo, ensure_ascii=False, indent=2, sort_keys=True)
+        arquivo_temporario.replace(indice_file)
         print(f"Índice salvo em {indice_file}.")
         return True
-    except OSError as erro:
+    except (OSError, TypeError) as erro:
         print(f"ERRO ao salvar o índice: {erro}")
         return False
 
@@ -123,8 +121,8 @@ def carregar_indice(indice_file=ARQUIVO_INDICE_PADRAO):
         return False
 
     try:
-        with indice_file.open("rb") as arquivo:
-            dados_carregados = pickle.load(arquivo)
+        with indice_file.open("r", encoding="utf-8") as arquivo:
+            dados_carregados = json.load(arquivo)
 
         if dados_carregados.get("versao") != VERSAO_INDICE:
             raise ValueError("versão de índice antiga ou desconhecida")
@@ -143,7 +141,7 @@ def carregar_indice(indice_file=ARQUIVO_INDICE_PADRAO):
         reconstruir_trie()
         print("Índice carregado com sucesso.")
         return True
-    except (OSError, pickle.UnpicklingError, AttributeError, EOFError, KeyError, ValueError) as erro:
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError, AttributeError, KeyError, TypeError, ValueError) as erro:
         print(f"Não foi possível carregar o índice ({erro}). Ele será recriado.")
         return False
 

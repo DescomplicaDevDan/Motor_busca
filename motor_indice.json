@@ -1,0 +1,523 @@
+{
+  "documentos_ids": [
+    "doc1.txt",
+    "doc2.txt",
+    "doc3.txt",
+    "doc4.txt"
+  ],
+  "indice_invertido": {
+    "aguentava": {
+      "doc4.txt": 1
+    },
+    "ah": {
+      "doc4.txt": 1
+    },
+    "ajudar": {
+      "doc4.txt": 1
+    },
+    "alguns": {
+      "doc4.txt": 1
+    },
+    "alheio": {
+      "doc4.txt": 1
+    },
+    "amarrar": {
+      "doc4.txt": 1
+    },
+    "amigos": {
+      "doc3.txt": 1
+    },
+    "animado": {
+      "doc4.txt": 1
+    },
+    "animal": {
+      "doc4.txt": 1
+    },
+    "antes": {
+      "doc4.txt": 1
+    },
+    "apenas": {
+      "doc4.txt": 1
+    },
+    "aplicação": {
+      "doc3.txt": 1
+    },
+    "aprendeu": {
+      "doc4.txt": 1
+    },
+    "aproximou": {
+      "doc4.txt": 1
+    },
+    "atalho": {
+      "doc4.txt": 1
+    },
+    "até": {
+      "doc4.txt": 1
+    },
+    "avançadas": {
+      "doc3.txt": 1
+    },
+    "beira": {
+      "doc4.txt": 1
+    },
+    "beto": {
+      "doc4.txt": 8
+    },
+    "bom": {
+      "doc4.txt": 1
+    },
+    "busca": {
+      "doc1.txt": 1
+    },
+    "cansado": {
+      "doc4.txt": 1
+    },
+    "carregando": {
+      "doc4.txt": 1
+    },
+    "carregar": {
+      "doc4.txt": 1
+    },
+    "castor": {
+      "doc4.txt": 2
+    },
+    "cavar": {
+      "doc4.txt": 1
+    },
+    "certo": {
+      "doc4.txt": 1
+    },
+    "cheiro": {
+      "doc4.txt": 1
+    },
+    "concordou": {
+      "doc4.txt": 1
+    },
+    "consegue": {
+      "doc4.txt": 1
+    },
+    "conseguiria": {
+      "doc4.txt": 1
+    },
+    "consigo": {
+      "doc4.txt": 1
+    },
+    "construir": {
+      "doc4.txt": 1
+    },
+    "constrói": {
+      "doc4.txt": 1
+    },
+    "cão": {
+      "doc1.txt": 1,
+      "doc2.txt": 1,
+      "doc3.txt": 1
+    },
+    "dados": {
+      "doc3.txt": 1
+    },
+    "debaixo": {
+      "doc4.txt": 1
+    },
+    "deixeme": {
+      "doc4.txt": 1
+    },
+    "demais": {
+      "doc4.txt": 1
+    },
+    "demonstra": {
+      "doc3.txt": 1
+    },
+    "design": {
+      "doc4.txt": 1
+    },
+    "dia": {
+      "doc4.txt": 1
+    },
+    "disparou": {
+      "doc4.txt": 1
+    },
+    "disposta": {
+      "doc4.txt": 1
+    },
+    "disse": {
+      "doc4.txt": 1
+    },
+    "doce": {
+      "doc4.txt": 1
+    },
+    "documentos": {
+      "doc1.txt": 1
+    },
+    "dormindo": {
+      "doc2.txt": 1
+    },
+    "duro": {
+      "doc4.txt": 2
+    },
+    "dá": {
+      "doc4.txt": 1
+    },
+    "dágua": {
+      "doc4.txt": 1
+    },
+    "elas": {
+      "doc4.txt": 1
+    },
+    "ele": {
+      "doc4.txt": 3
+    },
+    "empurrar": {
+      "doc4.txt": 1
+    },
+    "encontrou": {
+      "doc4.txt": 1
+    },
+    "enorme": {
+      "doc4.txt": 1
+    },
+    "era": {
+      "doc4.txt": 2
+    },
+    "esforço": {
+      "doc4.txt": 1
+    },
+    "esperteza": {
+      "doc4.txt": 3
+    },
+    "essa": {
+      "doc4.txt": 1
+    },
+    "estava": {
+      "doc2.txt": 1,
+      "doc4.txt": 2
+    },
+    "este": {
+      "doc1.txt": 1
+    },
+    "estruturas": {
+      "doc3.txt": 1
+    },
+    "está": {
+      "doc4.txt": 1
+    },
+    "eu": {
+      "doc4.txt": 3
+    },
+    "ficou": {
+      "doc4.txt": 1
+    },
+    "fixar": {
+      "doc4.txt": 1
+    },
+    "focinho": {
+      "doc4.txt": 1
+    },
+    "fome": {
+      "doc4.txt": 1
+    },
+    "fresca": {
+      "doc4.txt": 1
+    },
+    "fresco": {
+      "doc4.txt": 1
+    },
+    "funcionou": {
+      "doc4.txt": 1
+    },
+    "félix": {
+      "doc4.txt": 9
+    },
+    "ganhou": {
+      "doc4.txt": 1
+    },
+    "grande": {
+      "doc2.txt": 1
+    },
+    "ideia": {
+      "doc4.txt": 1
+    },
+    "ideias": {
+      "doc4.txt": 1
+    },
+    "inteira": {
+      "doc4.txt": 1
+    },
+    "inteligência": {
+      "doc4.txt": 1
+    },
+    "isso": {
+      "doc4.txt": 1
+    },
+    "juntos": {
+      "doc4.txt": 1
+    },
+    "lento": {
+      "doc4.txt": 1
+    },
+    "madeira": {
+      "doc4.txt": 1
+    },
+    "mais": {
+      "doc4.txt": 3
+    },
+    "mal": {
+      "doc4.txt": 1
+    },
+    "manhã": {
+      "doc4.txt": 1
+    },
+    "marrom": {
+      "doc1.txt": 1
+    },
+    "mas": {
+      "doc4.txt": 4
+    },
+    "melhor": {
+      "doc4.txt": 1
+    },
+    "minha": {
+      "doc4.txt": 2
+    },
+    "minutos": {
+      "doc4.txt": 1
+    },
+    "mostrar": {
+      "doc4.txt": 1
+    },
+    "motor": {
+      "doc1.txt": 1
+    },
+    "movem": {
+      "doc4.txt": 1
+    },
+    "mover": {
+      "doc4.txt": 2
+    },
+    "muita": {
+      "doc4.txt": 1
+    },
+    "muito": {
+      "doc4.txt": 1
+    },
+    "nada": {
+      "doc4.txt": 1
+    },
+    "novo": {
+      "doc4.txt": 1
+    },
+    "não": {
+      "doc4.txt": 5
+    },
+    "nó": {
+      "doc4.txt": 1
+    },
+    "olhou": {
+      "doc4.txt": 1
+    },
+    "otimizado": {
+      "doc1.txt": 1
+    },
+    "pacientemente": {
+      "doc4.txt": 1
+    },
+    "parou": {
+      "doc4.txt": 1
+    },
+    "pedra": {
+      "doc4.txt": 1
+    },
+    "pedras": {
+      "doc4.txt": 1
+    },
+    "peixe": {
+      "doc4.txt": 2
+    },
+    "peixes": {
+      "doc4.txt": 1
+    },
+    "pelas": {
+      "doc4.txt": 1
+    },
+    "perfeito": {
+      "doc4.txt": 1
+    },
+    "perfeitos": {
+      "doc4.txt": 1
+    },
+    "pesado": {
+      "doc4.txt": 1
+    },
+    "pilar": {
+      "doc4.txt": 1
+    },
+    "pode": {
+      "doc4.txt": 2
+    },
+    "poderosa": {
+      "doc4.txt": 1
+    },
+    "podia": {
+      "doc4.txt": 1
+    },
+    "posso": {
+      "doc4.txt": 1
+    },
+    "preguiçoso": {
+      "doc1.txt": 1,
+      "doc2.txt": 1
+    },
+    "procurar": {
+      "doc4.txt": 1
+    },
+    "projeto": {
+      "doc3.txt": 1,
+      "doc4.txt": 1
+    },
+    "pronta": {
+      "doc4.txt": 1
+    },
+    "puxálo": {
+      "doc4.txt": 1
+    },
+    "pôr": {
+      "doc4.txt": 1
+    },
+    "quando": {
+      "doc4.txt": 1
+    },
+    "raiz": {
+      "doc4.txt": 1
+    },
+    "ramos": {
+      "doc4.txt": 1
+    },
+    "raposa": {
+      "doc1.txt": 1,
+      "doc3.txt": 1,
+      "doc4.txt": 2
+    },
+    "represa": {
+      "doc4.txt": 6
+    },
+    "rio": {
+      "doc4.txt": 2
+    },
+    "roer": {
+      "doc4.txt": 1
+    },
+    "rápido": {
+      "doc4.txt": 1
+    },
+    "saltou": {
+      "doc1.txt": 1
+    },
+    "se": {
+      "doc4.txt": 2
+    },
+    "sentouse": {
+      "doc4.txt": 1
+    },
+    "serve": {
+      "doc4.txt": 1
+    },
+    "sob": {
+      "doc4.txt": 1
+    },
+    "sobre": {
+      "doc1.txt": 1
+    },
+    "sol": {
+      "doc4.txt": 1
+    },
+    "somar": {
+      "doc4.txt": 1
+    },
+    "sorriu": {
+      "doc4.txt": 1
+    },
+    "sua": {
+      "doc4.txt": 1
+    },
+    "são": {
+      "doc3.txt": 1,
+      "doc4.txt": 1
+    },
+    "só": {
+      "doc4.txt": 1
+    },
+    "também": {
+      "doc4.txt": 1
+    },
+    "tanto": {
+      "doc4.txt": 1
+    },
+    "te": {
+      "doc4.txt": 1
+    },
+    "tem": {
+      "doc4.txt": 1
+    },
+    "tentando": {
+      "doc4.txt": 1
+    },
+    "tentar": {
+      "doc4.txt": 1
+    },
+    "tentou": {
+      "doc4.txt": 2
+    },
+    "ter": {
+      "doc4.txt": 1
+    },
+    "trabalhando": {
+      "doc4.txt": 1
+    },
+    "trabalho": {
+      "doc4.txt": 2
+    },
+    "tronco": {
+      "doc4.txt": 5
+    },
+    "troncos": {
+      "doc4.txt": 1
+    },
+    "usou": {
+      "doc4.txt": 1
+    },
+    "ver": {
+      "doc4.txt": 1
+    },
+    "videira": {
+      "doc4.txt": 1
+    },
+    "vinha": {
+      "doc4.txt": 1
+    },
+    "visão": {
+      "doc4.txt": 1
+    },
+    "viu": {
+      "doc4.txt": 1
+    },
+    "você": {
+      "doc4.txt": 5
+    },
+    "voz": {
+      "doc4.txt": 1
+    },
+    "ágil": {
+      "doc1.txt": 1
+    },
+    "ótimas": {
+      "doc4.txt": 1
+    }
+  },
+  "tamanhos_documentos": {
+    "doc1.txt": 12,
+    "doc2.txt": 5,
+    "doc3.txt": 10,
+    "doc4.txt": 203
+  },
+  "versao": 4
+}
