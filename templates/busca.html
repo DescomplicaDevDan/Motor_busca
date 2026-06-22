@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 Meu Motor de Busca TF-IDF</h1>
+
+    <form method="POST" action="/buscar" class="search-bar-container">
+        <i class="material-icons search-icon">search</i> 
+            
+            <input type="text" name="consulta" placeholder="Search..." required 
+                value="{{ termo_buscado if termo_buscado else '' }}">
+            
+        <i class="material-icons mic-icon">mic</i> 
+            <button type="submit" class="submit-button">Buscar</button> 
+    </form>
+
+        {% if resultados %}
+            <h2>Resultados para "{{ termo_buscado }}"</h2>
+            <p>Total de {{ resultados|length }} documentos encontrados.</p>
+            
+            {% for doc, pontuacao in resultados %}
+                <div class="resultado">
+                    <h3>{{ doc }}</h3>
+                    <p>Relevância: <span class="relevancia">{{ "%.4f"|format(pontuacao) }}</span></p>
+                </div>
+            {% endfor %}
+
+        {% elif termo_buscado %}
+            <h2>Resultados para "{{ termo_buscado }}"</h2>
+            <p>Nenhum documento encontrado para sua consulta.</p>
+        {% endif %}
+
+    </div>
+</body>
+</html>
