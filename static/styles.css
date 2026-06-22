@@ -44,8 +44,13 @@ h2 {
 
 
 /* 3. Estilo do Campo de Texto (Input) */
-.search-bar-container input[type="text"] {
+.campo-consulta {
     flex-grow: 1;
+    position: relative;
+}
+
+.search-bar-container input[type="text"] {
+    width: 100%;
     padding: 5px 0; 
     border: none;
     outline: none; /* Remove o contorno ao focar */
@@ -104,6 +109,13 @@ h2 {
     margin: 0 0 5px 0;
     color: #560967; 
 }
+.resultado h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+.resultado h3 a:hover {
+    text-decoration: underline;
+}
 .resultado p {
     margin: 0;
     font-size: 0.9em;
@@ -119,6 +131,32 @@ h2 {
     color: inherit;
     border-radius: 3px;
     padding: 1px 3px;
+}
+.sugestoes {
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    list-style: none;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+.sugestoes button {
+    width: 100%;
+    padding: 10px 14px;
+    border: 0;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    font-size: 15px;
+    text-align: left;
+}
+.sugestoes button:hover {
+    background: #e8faf7;
 }
 .relevancia {
     font-weight: bold;

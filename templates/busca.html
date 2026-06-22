@@ -14,10 +14,11 @@
 
     <form method="POST" action="/buscar" class="search-bar-container">
         <i class="material-icons search-icon">search</i> 
-            
-            <input type="text" name="consulta" placeholder="Search..." required 
-                value="{{ termo_buscado if termo_buscado else '' }}">
-            
+        <div class="campo-consulta">
+            <input id="campo-consulta" type="text" name="consulta" placeholder="Buscar documentos..." required
+                autocomplete="off" value="{{ termo_buscado if termo_buscado else '' }}">
+            <ul id="sugestoes" class="sugestoes" role="listbox" hidden></ul>
+        </div>
         <i class="material-icons mic-icon">mic</i> 
             <button type="submit" class="submit-button">Buscar</button> 
     </form>
@@ -28,7 +29,7 @@
             
             {% for resultado in resultados %}
                 <div class="resultado">
-                    <h3>{{ resultado.documento }}</h3>
+                    <h3><a href="{{ url_for('abrir_documento', nome_arquivo=resultado.documento) }}" target="_blank" rel="noopener">{{ resultado.documento }}</a></h3>
                     <p class="trecho">
                         {% for parte in resultado.partes_trecho %}
                             {% if parte.destacado %}<mark>{{ parte.texto }}</mark>{% else %}{{ parte.texto }}{% endif %}
@@ -44,5 +45,54 @@
         {% endif %}
 
     </div>
+    <script>
+        const campoConsulta = document.querySelector("#campo-consulta");
+        const listaSugestoes = document.querySelector("#sugestoes");
+        let temporizador;
+
+        function esconderSugestoes() {
+            listaSugestoes.replaceChildren();
+            listaSugestoes.hidden = true;
+        }
+
+        function escolherSugestao(sugestao) {
+            const ultimoEspaco = campoConsulta.value.lastIndexOf(" ");
+            const inicioDaConsulta = ultimoEspaco >= 0 ? campoConsulta.value.slice(0, ultimoEspaco + 1) : "";
+            campoConsulta.value = inicioDaConsulta + sugestao + " ";
+            campoConsulta.focus();
+            esconderSugestoes();
+        }
+
+        campoConsulta.addEventListener("input", () => {
+            window.clearTimeout(temporizador);
+            const ultimaPalavra = campoConsulta.value.trim().split(/\s+/).pop();
+            if (!ultimaPalavra) {
+                esconderSugestoes();
+                return;
+            }
+
+            temporizador = window.setTimeout(async () => {
+                const resposta = await fetch(`/api/autocomplete?q=${encodeURIComponent(campoConsulta.value)}`);
+                const dados = await resposta.json();
+                listaSugestoes.replaceChildren();
+
+                dados.sugestoes.forEach((sugestao) => {
+                    const botao = document.createElement("button");
+                    botao.type = "button";
+                    botao.textContent = sugestao;
+                    botao.addEventListener("click", () => escolherSugestao(sugestao));
+
+                    const item = document.createElement("li");
+                    item.appendChild(botao);
+                    listaSugestoes.appendChild(item);
+                });
+                listaSugestoes.hidden = dados.sugestoes.length === 0;
+            }, 180);
+        });
+
+        document.addEventListener("click", (evento) => {
+            if (!evento.target.closest(".campo-consulta")) esconderSugestoes();
+        });
+    </script>
 </body>
 </html>
