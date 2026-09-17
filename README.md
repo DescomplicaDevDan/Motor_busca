@@ -98,6 +98,10 @@ Consulte também o [registro de validação e capturas de tela](docs/VALIDACAO.m
 - O endpoint de reindexação não tem autenticação; o projeto não deve ser tratado como serviço de produção multiusuário sem controles adicionais.
 - Os testes automatizados verificam comportamentos específicos, não cobertura completa ou compatibilidade com todos os navegadores.
 
+## Desenvolvimento individual
+
+Trabalhei sozinho no desenvolvimento deste projeto, sem uma equipe de desenvolvimento.
+
 ## Autor
 
 [Danilo Texeira](https://github.com/DescomplicaDevDan)
