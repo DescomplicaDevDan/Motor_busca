@@ -60,6 +60,8 @@ python -m pip install -r requirements.txt
 python app.py
 ```
 
+O servidor inicia com depuração desativada. Para depurar localmente, use `flask --app app run --debug`; não use esse modo em um serviço público.
+
 Abra `http://127.0.0.1:5000` no navegador. Na primeira execução, o índice é
 criado automaticamente.
 
