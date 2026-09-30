@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Buscar documentos | Motor de Busca</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
@@ -34,14 +34,14 @@
         </section>
 
     <form id="form-busca" method="POST" action="/buscar" class="search-bar-container">
-        <i class="material-icons search-icon">search</i> 
+        <i class="material-icons search-icon" aria-hidden="true">search</i>
         <div class="campo-consulta">
-            <input id="campo-consulta" type="text" name="consulta" placeholder="Buscar documentos..." required
+            <input id="campo-consulta" aria-label="Buscar documentos" type="text" name="consulta" placeholder="Buscar documentos..." required
                 autocomplete="off" value="{{ termo_buscado if termo_buscado else '' }}">
-            <ul id="sugestoes" class="sugestoes" role="listbox" hidden></ul>
+            <ul id="sugestoes" class="sugestoes" aria-label="Sugestões de pesquisa" hidden></ul>
         </div>
-        <i class="material-icons mic-icon">mic</i> 
-            <button type="submit" class="submit-button">Buscar</button> 
+
+            <button type="submit" class="submit-button">Buscar</button>
     </form>
     <fieldset class="modo-busca">
         <legend>Encontrar documentos com:</legend>
@@ -52,7 +52,7 @@
         {% if resultados %}
             <h2>Resultados para "{{ termo_buscado }}"</h2>
             <p>Total de {{ resultados|length }} documentos encontrados.</p>
-            
+
             {% for resultado in resultados %}
                 <div class="resultado">
                     <h3><a href="{{ url_for('abrir_documento', nome_arquivo=resultado.documento) }}" target="_blank" rel="noopener">{{ resultado.documento }}</a></h3>
